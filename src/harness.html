@@ -13,8 +13,33 @@
     <title>Hello world!</title>
   </head>
   <body>
+    <header class="container">
+      <hgroup>
+        <h1>mtg-autocomplete</h1>
+        <p>Start typing a Magic card name below to see it in action.</p>
+      </hgroup>
+    </header>
     <main class="container">
-      <h1>Hello world!</h1>
+      <div class="grid">
+        <form>
+          <fieldset>
+            <label>
+              Search
+              <input name="search" id="searchBox" placeholder="Llanowar Elves..." type="search"
+                    autocomplete="off" autocapitalize="off" autocorrect="off" autofocus="on"/>
+            </label>
+          </fieldset>
+          <input type="submit" value="Search"/>
+        </form>
+
+        <div>
+          <h2>Results</h2>
+          <div id="results">
+            <i style="color: var(--pico-muted-color)">Run a search...</i>
+          </div>
+        </div>
+      </div>
     </main>
+    <footer></footer>
   </body>
 </html>
