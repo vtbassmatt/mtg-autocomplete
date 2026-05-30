@@ -37,7 +37,24 @@ class Trie {
   }
 
   candidates(str) {
-    //
+    const addr = this.#toAddr(str);
+    const resultsTarget = 20;
+
+    let node = this.root;
+    for (const a of addr) {
+      if (node.children.has(a)) { node = node.children.get(a); }
+      else { return []; }
+    }
+
+    let results = [];
+    let queue = new Array(node);
+    while (queue.length > 0) {
+      node = queue.shift();
+      if (node.contents != null) { results.push(node.contents); }
+      if (results.length >= resultsTarget) { return results; }
+      node.children.forEach((value) => { queue.push(value); });
+    }
+    return results;
   }
 
   #toAddr(str) {
