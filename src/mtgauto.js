@@ -1,13 +1,6 @@
-class TrieNode {
-  constructor(contents) {
-    this.contents = contents;
-    this.children = new Map();
-  }
-}
-
 class Trie {
   constructor() {
-    this.root = new TrieNode(null);
+    this.root = {'children': new Map()};
   }
 
   insert(str) {
@@ -15,7 +8,7 @@ class Trie {
 
     let node = this.root;
     for (const a of addr) {
-      if (!node.children.has(a)) { node.children.set(a, new TrieNode(null)); }
+      if (!node.children.has(a)) { node.children.set(a, {'children': new Map()}); }
       node = node.children.get(a);
     }
 
@@ -57,6 +50,19 @@ class Trie {
     return results;
   }
 
+  serialize() {
+    return JSON.stringify(this.root, (key, value) =>
+      value instanceof Map ? Array.from(value.entries()) : value
+    );
+  }
+
+  static fromSerialized(serialized) {
+    const result = new Trie();
+    result.root = JSON.parse(serialized, (key, value) =>
+      Array.isArray(value) && value.every(Array.isArray) ? new Map(value) : value,);
+    return result;
+  }
+
   #toAddr(str) {
     const splitter = /\s+/;
     const addr = [];
@@ -68,6 +74,25 @@ class Trie {
     return addr;
   }
 }
+
+const t = new Trie();
+t.insert("Llanowar Elves");
+t.insert("Llanowar Legion");
+t.insert("+2 Mace");
+console.log(t.candidates("llanowar"));
+console.log(t.candidates("llanowar e"));
+console.log(t.candidates("elves"));
+const ser = t.serialize();
+console.log(ser);
+
+const t2 = Trie.fromSerialized(ser);
+console.log(t2.candidates("llanowar"));
+console.log(t2.candidates("llanowar e"));
+console.log(t2.candidates("elves"));
+
+const ser2 = t2.serialize();
+console.log("survives roundtrip:", ser == ser2);
+
 
 (function () {
   const resultsContainer = document.getElementById("results");
