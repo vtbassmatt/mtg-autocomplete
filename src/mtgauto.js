@@ -1,6 +1,12 @@
 class Trie {
-  constructor() {
-    this.root = {'children': new Map()};
+  constructor(serializedData) {
+    if (serializedData) {
+      this.root = JSON.parse(serializedData, (key, value) => 
+        key == 'children' ? new Map(Object.entries(value)) : value
+      );
+    } else {
+      this.root = {'children': new Map()};
+    }
   }
 
   insert(str) {
@@ -52,15 +58,8 @@ class Trie {
 
   serialize() {
     return JSON.stringify(this.root, (key, value) =>
-      value instanceof Map ? Array.from(value.entries()) : value
+      value instanceof Map ? Object.fromEntries(value) : value
     );
-  }
-
-  static fromSerialized(serialized) {
-    const result = new Trie();
-    result.root = JSON.parse(serialized, (key, value) =>
-      Array.isArray(value) && value.every(Array.isArray) ? new Map(value) : value,);
-    return result;
   }
 
   #toAddr(str) {
@@ -85,7 +84,7 @@ console.log(t.candidates("elves"));
 const ser = t.serialize();
 console.log(ser);
 
-const t2 = Trie.fromSerialized(ser);
+const t2 = new Trie(ser);
 console.log(t2.candidates("llanowar"));
 console.log(t2.candidates("llanowar e"));
 console.log(t2.candidates("elves"));
