@@ -1,3 +1,4 @@
+// TODO: shorten 'children' to 'c' and 'contents' to 'v' - saves 30+% on filesize of serialized trie
 export class Trie {
   constructor(serializedData) {
     if (serializedData) {
