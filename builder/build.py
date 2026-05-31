@@ -23,6 +23,7 @@ FOOTER = """
 def download_and_unpack():
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', 'mtg-autocomplete/1.0.0')]
+    # TODO: we should be pulling from AtomicCards.json.xz or AllPrintings.sqlite.xz instead, for legalities
     with opener.open('https://mtgjson.com/api/v5/csv/cards.csv.xz') as response:
         print('downloading...')
         with lzma.open(response) as compressed:
